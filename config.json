@@ -1,0 +1,9 @@
+{ 
+    "date_range": {"start": "2024-01-01", "end": "2024-12-31"}, 
+    "categories": ["Electronics", "Clothing", "Food", "Books"], 
+    "analysis_type": ["monthly", "quarterly", "yearly"], 
+    "top_products_count": 10, 
+    "chart_st" : "seaborn",
+    "vip_requirement": 7000000,
+    "normal_requirement": 4500000
+}
