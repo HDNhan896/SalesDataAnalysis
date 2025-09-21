@@ -1,15 +1,15 @@
-Hệ thống Quản lý bán hàng này được xây dựng nhằm hỗ trợ việc theo dõi và kiểm soát hoạt động kinh doanh một cách khoa học, minh bạch và hiệu quả.
+📊 HỆ THỐNG PHÂN TÍCH BÁN HÀNG
+Một ứng dụng Python giúp quản lý và phân tích dữ liệu bán hàng từ file CSV.
 
+Hệ thống cung cấp giao diện menu trực quan, dễ sử dụng, hỗ trợ các chức năng:
+📥 Import & Xem dữ liệu: Nhập file CSV, thống kê tổng quan, kiểm tra chất lượng dữ liệu.
+⏳ Phân tích theo thời gian: Doanh thu theo tháng, quý, và tuần, kèm so sánh tăng trưởng.
+📦 Phân tích sản phẩm: Xác định Top sản phẩm bán chạy, doanh thu theo danh mục, và các sản phẩm kém hiệu quả.
+👥 Phân tích khách hàng: Thống kê khách hàng VIP, thường, và vãng lai dựa trên chi tiêu và tần suất mua.
+👉 Hệ thống được thiết kế để hỗ trợ sinh viên và doanh nghiệp nhỏ nhanh chóng nắm bắt tình hình kinh doanh, từ đó đưa ra quyết định chính xác hơn.
 
-Thông qua file quản lý, người dùng có thể:
-
- - Import và xem dữ liệu: import file CSV, xem thống kê tổng quát
- - 📊 Quản lý sản phẩm: nắm rõ danh mục hàng hóa, tồn kho và giá bán.
-
- - 👥 Quản lý khách hàng: theo dõi thông tin khách hàng, lịch sử mua hàng để xây dựng mối quan hệ bền vững.
-
- - Phân tích theo thời gian: doanh thu theo tháng, doanh thu theo quý, xu hướng theo tuần.
-
- - Phân tích sản phẩm: top sản phẩm bán chạy, sản phẩm bán ế.
-
- - Phân tích khác hàng: Khách hàng VIP, phân khúc khách hàng.
+🎯 Mục tiêu
+Dự án được xây dựng với mục tiêu chính:
+✅ Vận dụng kiến thức Python để giải quyết bài toán thực tế.
+✅ Tạo hệ thống phân tích có cấu trúc rõ ràng, dễ mở rộng.
+✅ Đạt điểm 10 trong bài tập lớn môn học.
