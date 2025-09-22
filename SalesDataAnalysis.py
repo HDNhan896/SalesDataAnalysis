@@ -11,18 +11,20 @@ def get_week_stats(data):
     week_data = {} # Dict rỗng
     
     for row in data[1:]:
-        week_index = datetime.strptime(row[0], "%Y-%m-%d").isocalendar().week # Lấy tháng từ cột date
+        year, week , _ = datetime.strptime(row[0], "%Y-%m-%d").isocalendar()
+        index = f"{year}-W{week:02d}"
+        
         revenue = int(row[6]) # Cột doanh thu
         quantity = int(row[4])
         
         # Nếu chưa có tháng này trong dict thì khởi tạo dict con
-        if week_index not in week_data:
-            week_data[week_index] = {"amount": 0, "transactions": 0, "quantity" : 0}
+        if index not in week_data:
+            week_data[index] = {"amount": 0, "transactions": 0, "quantity" : 0}
 
         # Cộng dồn vào tháng tương ứng
-        week_data[week_index]["amount"] += revenue
-        week_data[week_index]["transactions"] += 1
-        week_data[week_index]["quantity"] += quantity
+        week_data[index]["amount"] += revenue
+        week_data[index]["transactions"] += 1
+        week_data[index]["quantity"] += quantity
     return week_data
     
 # Function to calculate total revenue per month
@@ -134,9 +136,17 @@ def best_selling(data, index):
 def selectOneOne():
     # Inport file CSV vào
     with open('sales_data.csv', newline='', encoding="utf-8-sig") as file:
-        reader = csv.reader(file, delimiter=',')
-        data = list(reader)
+        reader = csv.DictReader(file, delimiter=',')
+        data = []
+        start = datetime.strptime(config['date_range']['start'], "%Y-%m-%d")
+        end = datetime.strptime(config['date_range']['end'], "%Y-%m-%d")
+        for row in reader:
+            time = datetime.strptime(row['date'], "%Y-%m-%d")
+            if start <= time <= end:
+                data.append(row)
+                
     print("File CSV đã được nhập thành công.")
+    print("Số dòng sau khi lọc:", len(data))
     print()
     return data
 
@@ -241,11 +251,11 @@ def selectTwoThree():
     print("| Tuần | Doanh thu (VND)    | Số GD | TB/GD (VND) | So với tuần trước |")
     print("|------|--------------------|-------|-------------|-------------------|")
     for row in week_data:
-        week = row
+        week = int(row[6:])
         week_amount = week_data[row]['amount']
         week_transactions = week_data[row]['transactions']
         week_amount_average = week_amount/week_transactions
-        if int(row) == 1:
+        if week == 1:
             change_str = "..."
         else:
             change = ((week_amount / week_data[prev_week]['amount']) * 100) - 100 if prev_week else 0 # Chỉ thực hiện khi prev != 0
