@@ -1,25 +1,48 @@
-📊 HỆ THỐNG PHÂN TÍCH BÁN HÀNG
-Một ứng dụng Python giúp quản lý và phân tích dữ liệu bán hàng từ file CSV.
+# 🛒 Sales Data Analysis – Hệ thống Phân tích Bán hàng
 
-Hệ thống cung cấp giao diện menu trực quan, dễ sử dụng, hỗ trợ các chức năng:
+## 📝 Giới thiệu
+Dự án này là một ứng dụng Python hỗ trợ **quản lý và phân tích dữ liệu bán hàng** từ file CSV.  
+Hệ thống được thiết kế với menu trực quan, dễ sử dụng, giúp theo dõi sản phẩm, khách hàng và doanh thu một cách hiệu quả.  
 
-📥 Import & Xem dữ liệu: Nhập file CSV, thống kê tổng quan, kiểm tra chất lượng dữ liệu.
+👉 Mục tiêu chính: **nhóm quyết tâm đạt điểm 10 trong bài tập lớn môn học!** 💯  
 
-⏳ Phân tích theo thời gian: Doanh thu theo tháng, quý, và tuần, kèm so sánh tăng trưởng.
+---
 
-📦 Phân tích sản phẩm: Xác định Top sản phẩm bán chạy, doanh thu theo danh mục, và các sản phẩm kém hiệu quả.
+## ⚙️ Chức năng chính
 
-👥 Phân tích khách hàng: Thống kê khách hàng VIP, thường, và vãng lai dựa trên chi tiêu và tần suất mua.
+- 📂 **Import & Xem dữ liệu**  
+  - Import file CSV  
+  - Xem thống kê tổng quan  
+  - Kiểm tra chất lượng dữ liệu  
 
-👉 Hệ thống được thiết kế để hỗ trợ sinh viên và doanh nghiệp nhỏ nhanh chóng nắm bắt tình hình kinh doanh, từ đó đưa ra quyết định chính xác hơn.
+- ⏱️ **Phân tích theo thời gian**  
+  - Doanh thu theo tháng  
+  - Doanh thu theo quý  
+  - Xu hướng theo tuần  
 
-🎯 Mục tiêu
+- 📦 **Phân tích sản phẩm**  
+  - Top sản phẩm bán chạy  
+  - Phân tích theo danh mục  
+  - Top sản phẩm bán ế  
 
-Dự án được xây dựng với mục tiêu chính:
+- 👥 **Phân tích khách hàng**  
+  - Danh sách khách hàng VIP  
+  - Phân khúc khách hàng (VIP, thường, vãng lai)  
 
-✅ Vận dụng kiến thức Python để giải quyết bài toán thực tế.
+- 📊 **Visualization & Báo cáo** *(đang phát triển)*  
+  - Biểu đồ doanh thu theo tháng, quý, tuần  
+  - Dashboard tổng quan  
+  - Xuất báo cáo Excel/PDF  
 
-✅ Tạo hệ thống phân tích có cấu trúc rõ ràng, dễ mở rộng.
+- 🤖 **Dự đoán & Machine Learning** *(đang phát triển)*  
+  - Dự đoán doanh thu tháng tiếp theo  
+  - Phân loại khách hàng tiềm năng  
 
-✅ Đạt điểm 10 trong bài tập lớn môn học.
+---
 
+## 🛠️ Cách cài đặt & chạy
+
+1. Clone repo:
+   ```bash
+   git clone https://github.com/<your-username>/SalesDataAnalysis.git
+   cd SalesDataAnalysis
