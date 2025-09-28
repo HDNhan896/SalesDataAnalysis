@@ -11,11 +11,11 @@ def get_week_stats(data):
     week_data = {} # Dict rỗng
     
     for row in data[1:]:
-        year, week , _ = datetime.strptime(row[0], "%Y-%m-%d").isocalendar()
+        year, week , _ = datetime.strptime(row['date'], "%Y-%m-%d").isocalendar()
         index = f"{year}-W{week:02d}"
         
-        revenue = int(row[6]) # Cột doanh thu
-        quantity = int(row[4])
+        revenue = int(row['total_amount']) # Cột doanh thu
+        quantity = int(row['quantity'])
         
         # Nếu chưa có tháng này trong dict thì khởi tạo dict con
         if index not in week_data:
@@ -33,8 +33,8 @@ def get_monthly_stats(data):
     for i in range(1,13):
         monthly_data[i] = {"revenue" : 0, "transactions" : 0}
     for row in data[1:]:
-        month_index = int(row[0].split('-')[1]) # Lấy tháng từ cột date
-        revenue = int(row[6]) # Cột doanh thu
+        month_index = int(row['date'].split('-')[1]) # Lấy tháng từ cột date
+        revenue = int(row['total_amount']) # Cột doanh thu
 
         # Cộng dồn vào tháng tương ứng
         monthly_data[month_index]["revenue"] += revenue
@@ -48,11 +48,11 @@ def get_product_stats(data):
     
     for row in data[1:]:
         # Lấy data từ trong csv gán cho từng dữ liệu
-        product_id = row[1] # Mã sản phẩm
-        product_name = row[2] # Tên sản phẩm
-        product_category = row[3] # Doanh mục
-        product_quantity = int(row[4]) # Số lượng
-        product_amount = int(row[6]) # Doanh thu
+        product_id = row['product_id'] # Mã sản phẩm
+        product_name = row['product_name'] # Tên sản phẩm
+        product_category = row['category'] # Doanh mục
+        product_quantity = int(row['quantity']) # Số lượng
+        product_amount = int(row['total_amount']) # Doanh thu
         
         # Nếu chưa có sản phẩm này trong dict thì khởi tạo dict con
         if product_id not in products_stats:
@@ -71,10 +71,10 @@ def get_customer_stats(data):
     
     for row in data[1:]:
         # Lấy data từ trong csv gán cho từng dữ liệu
-        customer_id = row[7] # Mã khách hàng
-        customer_quantity = int(row[4]) # Tổng sản phẩm khách hàng đã mua
-        customer_purchased = int(row[6]) # Tổng tiền khách đã mua
-        customer_order_date = datetime.strptime(row[0], "%Y-%m-%d") # Ngày mà khách mua hàng
+        customer_id = row['customer_id'] # Mã khách hàng
+        customer_quantity = int(row['quantity']) # Tổng sản phẩm khách hàng đã mua
+        customer_purchased = int(row['total_amount']) # Tổng tiền khách đã mua
+        customer_order_date = datetime.strptime(row['date'], "%Y-%m-%d") # Ngày mà khách mua hàng
         # Nếu chưa có sản phẩm này trong dict thì khởi tạo dict con
         if customer_id not in customer_stats:
             customer_stats[customer_id] = {
@@ -96,17 +96,17 @@ def get_customer_stats(data):
         
         
         # Cộng dồn vào sản phẩm tương ứng (số lượng và doanh thu)
-    customer_stats = dict(sorted(customer_stats.items(), key = lambda x : x[0] , reverse = False))
+    customer_stats = dict(sorted(customer_stats.items(), key = lambda x : x[1]['amount'] , reverse = True)) 
     return customer_stats
 
 def get_category_stats(data):
     category_stats = {}
     category_customers = {}
     for row in data[1:]:
-        category_name = row[3]
-        category_quantity = int(row[4])
-        category_amount = int(row[6])
-        customer_id = row[7]
+        category_name = row['category']
+        category_quantity = int(row['quantity'])
+        category_amount = int(row['total_amount'])
+        customer_id = row['customer_id']
         if category_name not in category_stats:
             category_stats[category_name] = {'quantity': category_quantity, 'amount': category_amount}
             category_customers[category_name] = set([customer_id])
@@ -124,7 +124,7 @@ def best_selling(data, index):
     day_sales = {}
     for row in data[1:]:
         day = row[index]
-        revenue = int(row[6])
+        revenue = int(row['total_amount'])
         if day in day_sales:
             day_sales[day] += revenue
         else:
@@ -148,7 +148,7 @@ def selectOneOne():
     print("File CSV đã được nhập thành công.")
     print("Số dòng sau khi lọc:", len(data))
     print()
-    return data
+    return list(data)
 
 def selectOneTwo():
     # Khai báo 1 dictionary để tính tổng doang thu và số lượng sản phẩm đã bán của từng tháng
@@ -158,10 +158,10 @@ def selectOneTwo():
     max_month_index = max(monthly_data, key=lambda m: monthly_data[m]['revenue'])
     min_month_index = min(monthly_data, key=lambda m: monthly_data[m]['revenue'])
     
-    day_sell = best_selling(data, 0) #Tính doanh thu của từng ngày
-    type_sell = best_selling(data, 3) #Tính doanh thu của từng loại mặt hàng
+    day_sell = best_selling(data, 'date') #Tính doanh thu của từng ngày
+    type_sell = best_selling(data, 'category') #Tính doanh thu của từng loại mặt hàng
     
-    total = sum(int(row[6]) for row in data[1:]) #Tính tổng doanh thu của cả file sales_data.csv
+    total = sum(int(row['total_amount']) for row in data[1:]) #Tính tổng doanh thu của cả file sales_data.csv
     total_Aver = total / (len(data)-1) #Tính tổng doang thu trung bình của cả file sales_data.csv
     best_type_top4 = sorted(type_sell.items(), key=lambda x: x[1], reverse=True)[:4] #Hàm để thực hiện việc sắp xếp doanh thu của từng loại mặt hàng (lớn -> bé)
 
@@ -178,8 +178,8 @@ def selectOneTwo():
     print("- Tổng số giao dịch:", len(data)-1)
     print("- Tổng doanh thu:", totalFormatted)
     print("- Trung bình/giao dịch:", averageTotalFormatted)
-    print("- Số sản phẩm khác nhau:", len(set(row[1] for row in data[1:])))
-    print("- Số khách hàng:", len(set(row[7] for row in data[1:])))
+    print("- Số sản phẩm khác nhau:", len(set(row['product_id'] for row in data[1:])))
+    print("- Số khách hàng:", len(set(row['customer_id'] for row in data[1:])))
     print("\n📈 Theo thời gian:")
     print("- Tháng cao nhất: Tháng {} ({})".format(max_month_index, maxMonthFormatted))
     print("- Tháng thấp nhất: Tháng {} ({})".format(min_month_index, minMonthFormatted))
@@ -271,7 +271,7 @@ def selectThreeOne():
     products_data = get_product_stats(data)
     products_data_top10 = dict(sorted(products_data.items(), key = lambda x : x[1]['amount'], reverse = True)[:10])
     index = 0
-    total = sum(int(row[6]) for row in data[1:])
+    total = sum(int(row['total_amount']) for row in data[1:])
     print("\n================================== TOP 10 SẢN PHẨM BÁN CHẠY =================================")
     print("| Hạng | Mã SP | Tên sản phẩm              | Danh mục    | Số lượng | Doanh thu     | Tỷ lệ |")
     print("|------|-------|---------------------------|-------------|----------|---------------|-------|")
@@ -287,7 +287,7 @@ def selectThreeOne():
     print("=============================================================================================")
     
 def selectThreeTwo():
-    total = sum(int(row[6]) for row in data[1:])
+    total = sum(int(row['total_amount']) for row in data[1:])
     type_sell = get_category_stats(data)       
     type_sell = dict(sorted(type_sell.items(), key = lambda x : x[1]['amount'], reverse = True)) 
     print("\n===================== PHÂN TÍCH THEO DOANH MỤC =======================")
@@ -307,7 +307,7 @@ def selectThreeThree():
     products_data = get_product_stats(data)
     products_data_worst = dict(sorted(products_data.items(), key = lambda x : x[1]['amount'], reverse = False)[:10])
     index = 0
-    total = sum(int(row[6]) for row in data[1:])
+    total = sum(int(row['total_amount']) for row in data[1:])
     print("\n=================================== TOP 10 SẢN PHẨM BÁN Ế ===================================")
     print("| Hạng | Mã SP | Tên sản phẩm              | Danh mục    | Số lượng | Doanh thu     | Tỷ lệ |")
     print("|------|-------|---------------------------|-------------|----------|---------------|-------|")
