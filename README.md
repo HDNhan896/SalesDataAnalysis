@@ -55,4 +55,5 @@ Hệ thống cho phép **quản lý và phân tích dữ liệu bán hàng** t�
 ├── SalesDataAnalysis.py            # File code chính
 ├── sales_analysis_report_2024.pdf  # Báo cáo PDF xuất ra
 ├── README.md                       # Tài liệu mô tả dự án
-└── fonts/                          # Font DejaVuSans cho PDF
+├── fonts/                          # Font DejaVuSans cho PDF
+└── output/               pdf
