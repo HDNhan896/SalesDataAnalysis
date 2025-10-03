@@ -1,6 +1,13 @@
 import json
 import csv
 from datetime import datetime
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import title
+import matplotlib.gridspec as gridspec
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 # Read configuration from JSON file
 with open('config.json', 'r') as file:
@@ -131,10 +138,82 @@ def best_selling(data, index):
             day_sales[day] = revenue
     return day_sales
 
+def output_report(data):
+    # Đăng ký font DejaVu Sans
+    monthly_data = get_monthly_stats(data)
+
+    # Tính xem tháng có doanh thu nhiều nhất và thấp nhất là tháng nào
+    max_month_index = max(monthly_data, key=lambda m: monthly_data[m]['revenue'])
+    min_month_index = min(monthly_data, key=lambda m: monthly_data[m]['revenue'])
+
+    day_sell = best_selling(data, 'date')  # Tính doanh thu của từng ngày
+    type_sell = best_selling(data, 'category')  # Tính doanh thu của từng loại mặt hàng
+
+    total = sum(int(row['total_amount']) for row in data[1:])  # Tính tổng doanh thu của cả file sales_data.csv
+    total_Aver = total / (len(data) - 1)  # Tính tổng doang thu trung bình của cả file sales_data.csv
+    best_type_top4 = list(sorted(type_sell.items(), key=lambda x: x[1],
+                                 reverse=True))  # Hàm để thực hiện việc sắp xếp doanh thu của từng loại mặt hàng (lớn -> bé)
+
+    totalFormatted = f"{total:,} VND"
+    averageTotalFormatted = f"{total_Aver:,.2f} VND"
+    maxMonthFormatted = f"{monthly_data[max_month_index]['revenue']:,} VND"
+    minMonthFormatted = f"{monthly_data[min_month_index]['revenue']:,} VND"
+
+    pdfmetrics.registerFont(TTFont('DejaVuSans', 'fonts/DejaVuSans.ttf'))  # Đảm bảo file DejaVuSans.ttf có trong thư mục fonts
+    pdfmetrics.registerFont(TTFont('DejaVuSans-Bold', 'fonts/DejaVuSans-Bold.ttf'))  # Đảm bảo file DejaVuSans.ttf có trong thư mục fonts
+    # Tạo một đối tượng canvas (pdf)
+    pdf_file = "output/sales_analysis_report_2024.pdf"
+    c = canvas.Canvas(pdf_file, pagesize=letter)
+
+    # Sử dụng font đã đăng ký
+    c.setFont("DejaVuSans", 12)  # Chọn font DejaVuSans với kích thước 1
+
+    # Tiêu đề
+    c.setFont("DejaVuSans-Bold", 16)
+    c.drawString(60, 750, "========== THỐNG KÊ TỔNG QUAN ==========")
+
+    # Thời gian phân tích
+    c.setFont("DejaVuSans", 12)
+    c.drawString(60, 730,
+                 "Thời gian phân tích: {} đến {}".format(config["date_range"]["start"], config["date_range"]["end"]))
+
+    # Dữ liệu cơ bản
+    c.setFont("DejaVuSans-Bold", 14)
+    c.drawString(60, 710, "1. Dữ liệu cơ bản:")
+    c.setFont("DejaVuSans", 12)
+    c.drawString(60, 690, "- Tổng số giao dịch: {}".format(len(data) - 1))
+    c.drawString(60, 670, "- Tổng doanh thu: {}".format(totalFormatted))
+    c.drawString(60, 650, "- Trung bình/giao dịch: {}".format(averageTotalFormatted))
+    c.drawString(60, 630, "- Số sản phẩm khác nhau: {}".format(len(set(row['product_id'] for row in data[1:]))))
+    c.drawString(60, 610, "- Số khách hàng: {}".format(len(set(row['customer_id'] for row in data[1:]))))
+
+    # Theo thời gian
+    c.setFont("DejaVuSans-Bold", 14)
+    c.drawString(60, 570, "2. Theo thời gian:")
+    c.setFont("DejaVuSans", 12)
+    c.drawString(60, 550, "- Tháng cao nhất: Tháng {} ({})".format(max_month_index, maxMonthFormatted))
+    c.drawString(60, 530, "- Tháng thấp nhất: Tháng {} ({})".format(min_month_index, minMonthFormatted))
+    c.drawString(60, 510, "- Ngày bán nhiều nhất: {}".format(max(day_sell, key=day_sell.get)))
+
+    # Top danh mục
+    c.setFont("DejaVuSans-Bold", 14)
+    c.drawString(60, 470, "3. Top danh mục:")
+    c.setFont("DejaVuSans", 12)
+    key, value = best_type_top4[0]
+    c.drawString(60, 450, "1. {}: {} ({:.2f}%)".format(key, value, (value / total) * 100))
+    key, value = best_type_top4[1]
+    c.drawString(60, 430, "2. {}: {} ({:.2f}%)".format(key, value, (value / total) * 100))
+    key, value = best_type_top4[2]
+    c.drawString(60, 410, "3. {}: {} ({:.2f}%)".format(key, value, (value / total) * 100))
+    key, value = best_type_top4[3]
+    c.drawString(60, 390, "4. {}: {} ({:.2f}%)".format(key, value, (value / total) * 100))
+    c.save()
+    
+    print("File đã được lưu vào thư mục output.")
 
 # Function choice
 def selectOneOne():
-    # Inport file CSV vào
+    # Import file CSV vào
     with open('sales_data.csv', newline='', encoding="utf-8-sig") as file:
         reader = csv.DictReader(file, delimiter=',')
         data = []
@@ -394,6 +473,98 @@ def selectFourTwo():
             last_date_str = customer_last_order_date.strftime("%Y-%m-%d")
             print(f"|    {customer_id:<11}|  {customer_amout:>17}|{customer_quantity:>7} | {last_date_str:>12} | {int(purchase_frequency):>2} lần/tháng |")
     print("============================================================================")
+
+def selectFiveOne():
+    global data  # Sử dụng biến toàn cục đã load ở bước 1.1
+    if not data:
+        print("Vui lòng nhập dữ liệu trước (1.1)!")
+        return
+
+    print("\n========== TẠO BIỂU ĐỒ ==========")
+    print("1. Biểu đồ doanh thu theo tháng")
+    print("2. Biểu đồ top sản phẩm bán chạy")
+    print("3. Biểu đồ tỷ lệ doanh thu theo danh mục")
+    print("4. Quay lại")
+
+    sub_choice = input("Chọn loại biểu đồ (1-4): ")
+    if sub_choice == '1':
+        monthly = get_monthly_stats(data)
+        months = list(monthly.keys())
+        revenue = [monthly[m]['revenue']for m in months]
+        plt.figure(figsize=(10,5))
+        plt.plot(months, revenue, marker='o', color='blue')
+        plt.title("Doanh thu theo tháng")
+        plt.xlabel("Tháng")
+        plt.ylabel("Doanh thu (VNĐ)")
+        plt.grid(True)
+        plt.show()
+    elif sub_choice == "2":
+        products = get_product_stats(data)
+        top10 = sorted(products.items(), key=lambda x: x[1]['amount'], reverse=True)[:10]
+        product_names = [p[1]['name'] for p in top10]
+        revenues = [p[1]['amount'] for p in top10]
+        plt.figure(figsize=(15, 6))
+        plt.bar(product_names, revenues, color='green')  # Biểu đồ cột dọc
+        plt.title("Top 10 sản phẩm bán chạy")
+        plt.xlabel("Sản phẩm")
+        plt.ylabel("Doanh thu (VND)")
+        plt.xticks(rotation=0, ha='center')  # Xoay nhãn trục x để dễ đọc
+        plt.tight_layout()
+        plt.show()
+    elif sub_choice == "3":
+        categories = get_category_stats(data)
+        labels = list(categories.keys())
+        sizes = [categories[c]['amount'] for c in labels]
+        plt.figure(figsize=(8, 8))
+        plt.pie(sizes, labels=labels, autopct='%1.2f%%', startangle=140)
+        plt.title("Tỷ lệ doanh thu theo danh mục")
+        plt.axis("equal")
+        plt.show()
+
+    elif sub_choice == "4":
+        return plt
+    else:
+        print("Lựa chọn không hợp lệ.")
+    return plt
+
+def selectFiveTwo():
+    fig = plt.figure(figsize=(20,10))
+    gs = gridspec.GridSpec(2,2, height_ratios=[1,1.2])
+
+    monthly = get_monthly_stats(data)
+    months = list(monthly.keys())
+    revenue = [monthly[m]['revenue'] for m in months]
+
+    products = get_product_stats(data)
+    top10 = sorted(products.items(), key=lambda x: x[1]['amount'], reverse=True)[:10]
+    product_names = [p[1]['name'] for p in top10]
+    revenues = [p[1]['amount'] for p in top10]
+
+    categories = get_category_stats(data)
+    labels = list(categories.keys())
+    sizes = [categories[c]['amount'] for c in labels]
+
+    axs1 = fig.add_subplot(gs[0, 0])
+    axs1.plot(months, revenue, color='blue')
+    axs1.set_title("Biểu đồ doanh thu theo tháng")
+    axs1.set_ylabel('VND')
+
+    axs2 = fig.add_subplot(gs[1, :])
+    axs2.bar(product_names, revenues, color='green')
+    axs2.set_title("Top 10 sản phẩm bán chạy")
+    axs2.set_ylabel('VND')
+
+    axs3 = fig.add_subplot(gs[0, 1])
+    axs3.pie(sizes, labels=labels, autopct='%1.2f%%', startangle=140)
+    axs3.set_title("Biểu đồ tỷ lệ doanh thu theo danh mục")
+
+    plt.tight_layout()
+    fig.suptitle("DASHBOARD TỔNG QUAN", fontsize=12, y=1)
+    plt.show()
+  
+def selectSix():
+    output_report(data)
+    
 # Element to store data
 data = []
 
@@ -457,13 +628,14 @@ while True:
         selectFourTwo()
         input("\nNhấn Enter để tiếp tục...")
     elif choice == "5.1":
-        print("Tạo biểu đồ...")
+        selectFiveOne()
     elif choice == "5.2":
-        print("Tạo dashboard tổng quan...")
+        selectFiveTwo()
     elif choice == "5.3":
         print("Xuất báo cáo...")
     elif choice == "6":
-        print("Dự đoán và ML...")
+        selectSix()
+        input("\nNhấn Enter để tiếp tục...")
     elif choice == "7":
         print("Thoát chương trình.")
         break
