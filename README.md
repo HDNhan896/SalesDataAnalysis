@@ -49,9 +49,10 @@ Hệ thống cho phép **quản lý và phân tích dữ liệu bán hàng** t�
 ---
 
 ## 📂 Cấu trúc thư mục
-├── sales_data.csv # Dữ liệu bán hàng
-├── config.json # File cấu hình (thời gian, ngưỡng VIP, Normal)
-├── SalesDataAnalysis.py # File code chính
-├── sales_analysis_report_2024.pdf # Báo cáo PDF xuất ra
-├── README.md # Tài liệu mô tả dự án
-└── fonts/ # Font DejaVuSans cho PDF
+```plaintext
+├── sales_data.csv                  # Dữ liệu bán hàng
+├── config.json                     # File cấu hình (thời gian, ngưỡng VIP, Normal)
+├── SalesDataAnalysis.py            # File code chính
+├── sales_analysis_report_2024.pdf  # Báo cáo PDF xuất ra
+├── README.md                       # Tài liệu mô tả dự án
+└── fonts/                          # Font DejaVuSans cho PDF
