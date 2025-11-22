@@ -1,59 +1,46 @@
-# 📊 Hệ Thống Phân Tích Bán Hàng
+📊 Sales Data Analysis System – Python Project
 
-## 🚀 Giới thiệu
-Đây là một **project Python** được xây dựng bởi sinh viên năm 2 trong **4 ngày làm việc (trải dài 2 tuần)**.  
-Hệ thống cho phép **quản lý và phân tích dữ liệu bán hàng** từ file CSV, xuất báo cáo PDF, và trực quan hóa bằng biểu đồ/dashboard.  
+🚀 Giới thiệu
+Sales Data Analysis là một hệ thống phân tích dữ liệu bán hàng được xây dựng bằng Python, hỗ trợ phân tích doanh thu, khách hàng, sản phẩm, trực quan hóa và dự báo bằng Machine Learning.
 
-👉 **Timeline phát triển:**
-- **Ngày 1–3:** Xây dựng core system (import CSV, phân tích dữ liệu, phân tích sản phẩm & khách hàng).  
-- **Nghỉ 1 tuần** do bận công việc.  
-- **Ngày 4:** Hoàn thiện Visualization (biểu đồ, dashboard) và thêm module ML cơ bản (dự báo).  
+🧠 Tính năng chính
+1. Import & xử lý dữ liệu CSV
+2. Phân tích theo thời gian (tháng, quý, tuần)
+3. Phân tích sản phẩm (top bán chạy, bán chậm)
+4. Phân tích khách hàng (VIP – thường – vãng lai)
+5. Visualization: biểu đồ & dashboard
+6. Xuất báo cáo PDF có biểu đồ
+7. Machine Learning: dự báo doanh thu 12 tháng
 
----
+⚙️ Công nghệ sử dụng
+- Python 3.x
+- Pandas
+- Matplotlib
+- ReportLab
+- scikit-learn
 
-## ⚙️ Chức năng chính
-- **Import & kiểm tra dữ liệu**  
-  - Đọc file CSV.  
-  - Thống kê tổng quan: số giao dịch, sản phẩm, khách hàng, doanh thu.  
+📂 Cấu trúc thư mục
+project/
+ ├── SalesDataAnalysis.py
+ ├── config.json
+ ├── sales_data.csv
+ ├── README.md
+ ├── charts/
+ ├── output/
+ ├── fonts/
 
-- **Phân tích theo thời gian**  
-  - Doanh thu theo **tháng, quý, tuần**.  
-  - So sánh tăng trưởng theo chu kỳ.  
+📌 Cách chạy
+pip install pandas matplotlib reportlab scikit-learn
+python SalesDataAnalysis.py
 
-- **Phân tích sản phẩm**  
-  - Top sản phẩm bán chạy.  
-  - Danh sách sản phẩm ế ẩm.  
-  - Doanh thu theo danh mục.  
+📈 Machine Learning
+Sử dụng Linear Regression & Polynomial Regression để dự báo doanh thu theo tháng.
 
-- **Phân tích khách hàng**  
-  - Phân loại khách hàng **VIP / Thường / Vãng lai** dựa trên config JSON.  
-  - Thống kê chi tiêu, tần suất mua hàng.  
+🧩 RFM Analysis
+Tự động phân khúc khách hàng theo Recency – Frequency – Monetary.
 
-- **Visualization & Báo cáo**  
-  - Biểu đồ doanh thu, sản phẩm, danh mục.  
-  - Dashboard tổng quan.  
-  - Xuất báo cáo PDF với font Unicode (tiếng Việt không lỗi).  
+📜 License
+MIT License
 
-- **Machine Learning (cơ bản, placeholder)**  
-  - Module mở rộng cho dự báo doanh thu trong tương lai.  
-
----
-
-## 🛠️ Công nghệ sử dụng
-- Python 3.x  
-- **CSV, JSON** để quản lý dữ liệu  
-- **Matplotlib** (vẽ biểu đồ)  
-- **ReportLab** (xuất báo cáo PDF)  
-- Thuật toán xử lý dữ liệu thuần Python (dict, sorting, grouping)  
-
----
-
-## 📂 Cấu trúc thư mục
-```plaintext
-├── sales_data.csv                  # Dữ liệu bán hàng
-├── config.json                     # File cấu hình (thời gian, ngưỡng VIP, Normal)
-├── SalesDataAnalysis.py            # File code chính
-├── sales_analysis_report_2024.pdf  # Báo cáo PDF xuất ra
-├── README.md                       # Tài liệu mô tả dự án
-├── fonts/                          # Font DejaVuSans cho PDF
-└── output/               pdf
+✨ Tác giả
+Hải Yến – Sinh viên IT năm 2
