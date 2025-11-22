@@ -865,7 +865,7 @@ class SalesAnalyzer:
 
     def plot_forecast(self, historical_data, future_dates, predictions, model_name):
         plt.figure(figsize=(15, 8))
-        # ... (Toàn bộ code của plot_forecast dán vào đây) ...
+        # Toàn bộ code của plot_forecast dán vào đây
         plt.plot(historical_data['date'], historical_data['total_amount'], marker='o', linewidth=2, label='Dữ liệu lịch sử', color='blue')
         plt.plot(future_dates, predictions, marker='s', linewidth=2, linestyle='--', label='Dự đoán', color='red')
         plt.title(f'Dự đoán Doanh thu bằng {model_name} Regression', fontsize=16, fontweight='bold')
@@ -893,7 +893,7 @@ class SalesAnalyzer:
         if 'customer_id' not in self.data.columns:
             print("X Không có thông tin customer_id trong dữ liệu")
             return None
-        # ... (Toàn bộ code của customer_segmentation dán vào đây) ...
+        # Toàn bộ code của customer_segmentation dán vào đây
         current_date = self.data['date'].max()
         rfm = self.data.groupby('customer_id').agg({
             'date': lambda x: (current_date - x.max()).days, # Recency
@@ -980,6 +980,7 @@ def selectSix():
     analyzer.advanced_analytics()
     
     print("\n--- Hoàn tất Chức năng 6 ---")
+
 # Element to store data
 data = []
 
@@ -1056,3 +1057,4 @@ while True:
         print("Thoát chương trình.")
         break
     
+
